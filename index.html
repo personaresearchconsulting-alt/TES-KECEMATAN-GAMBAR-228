@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akses Instrumen - Persona Research & Consulting</title>
+    <style>
+        :root {
+            --navy: #0b2340;
+            --gold: #d4a017;
+            --gray: #f1f5f9;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-top: 6px solid var(--navy);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .logo-text {
+            color: var(--navy);
+            font-weight: 800;
+            margin-bottom: 5px;
+            font-size: 20px;
+        }
+        .sub-text {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            text-align: center;
+        }
+        .btn-access {
+            background: var(--navy);
+            color: white;
+            border: none;
+            padding: 14px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-access:hover {
+            background: #163a66;
+        }
+        .menu-area {
+            display: none;
+            text-align: left;
+        }
+        .test-item {
+            display: block;
+            padding: 15px;
+            background: var(--gray);
+            margin: 10px 0;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--navy);
+            font-weight: 600;
+            border-left: 4px solid var(--gold);
+            transition: 0.2s;
+        }
+        .test-item:hover {
+            transform: translateX(5px);
+            background: #cbd5e1;
+        }
+        .error { color: #c0392b; font-size: 13px; margin-top: -10px; margin-bottom: 10px; display: none; }
+        .info-license { font-size: 11px; color: #94a3b8; margin-top: 20px; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="logo-text">PERSONA RESEARCH</div>
+    <div class="sub-text">Portal Verifikasi Lisensi</div>
+
+    <div id="authArea">
+        <input type="password" id="passInput" placeholder="Masukkan Kode Akses">
+        <div id="errMsg" class="error">Kode salah atau akses habis!</div>
+        <button class="btn-access" onclick="checkAccess()">VERIFIKASI</button>
+    </div>
+
+    <div id="menuArea" class="menu-area">
+        <p style="font-weight: bold; font-size: 14px;">PILIH INSTRUMEN:</p>
+        <a href="mono_7fix.html" class="test-item">1. Tes Kecermatan (V.7-Fix)</a>
+        <a href="mono_10.html" class="test-item">2. Tes Kecermatan (V.10-Final)</a>
+        <div class="info-license">
+            Lisensi Aktif hingga: <span id="expDate"></span><br>
+            Batas Perangkat: 3 Device (Terdaftar)
+        </div>
+    </div>
+</div>
+
+<script>
+    const CONFIG = {
+        pass: "yuda12345p",
+        durationDays: 7,
+        maxDevices: 3
+    };
+
+    function getDeviceId() {
+        let id = localStorage.getItem('persona_device_id');
+        if (!id) {
+            id = 'dev-' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('persona_device_id', id);
+        }
+        return id;
+    }
+
+    function checkAccess() {
+        const input = document.getElementById('passInput').value;
+        const errMsg = document.getElementById('errMsg');
+        const now = new Date();
+
+        // 1. Cek Password
+        if (input !== CONFIG.pass) {
+            errMsg.style.display = 'block';
+            errMsg.textContent = "Kode akses tidak valid!";
+            return;
+        }
+
+        // 2. Logika Masa Berlaku (Set saat login pertama kali)
+        let expiry = localStorage.getItem('persona_expiry');
+        if (!expiry) {
+            const expiryDate = new Date();
+            expiryDate.setDate(now.getDate() + CONFIG.durationDays);
+            localStorage.setItem('persona_expiry', expiryDate.getTime());
+            expiry = expiryDate.getTime();
+        }
+
+        if (now.getTime() > parseInt(expiry)) {
+            errMsg.style.display = 'block';
+            errMsg.textContent = "Masa berlaku akses telah habis (7 Hari)!";
+            return;
+        }
+
+        // 3. Logika Device Limit (Simulasi LocalStorage)
+        // Catatan: Limit murni 3 device memerlukan database backend. 
+        // Secara client-side, kita memastikan ID perangkat tersimpan.
+        getDeviceId(); 
+
+        showMenu(expiry);
+    }
+
+    function showMenu(expiry) {
+        document.getElementById('authArea').style.display = 'none';
+        document.getElementById('menuArea').style.display = 'block';
+        const d = new Date(parseInt(expiry));
+        document.getElementById('expDate').textContent = d.toLocaleDateString('id-ID', {
+            day: 'numeric', month: 'long', year: 'numeric'
+        });
+    }
+
+    // Auto-login jika sudah pernah verifikasi dan belum expired
+    window.onload = function() {
+        const expiry = localStorage.getItem('persona_expiry');
+        if (expiry && new Date().getTime() < parseInt(expiry)) {
+            showMenu(expiry);
+        }
+    }
+</script>
+
+</body>
+</html>
