@@ -110,16 +110,16 @@
 <script>
     // 2. BANK SOAL MENGGUNAKAN ARRAY (ANTI-MACET)
     const MASTER_BANK = [
-    ["🔬", "💊", "🩺", "🧪", "💉"],
-    ["🧬", "🧠", "🫀", "🩻", "🦴"],
-    ["🌡️", "🧪", "🧬", "🔬", "💊"],
-    ["🩺", "💉", "🩹", "🏥", "🚑"],
-    ["🧠", "👁️", "🦷", "👂", "👃"],
-    ["🧪", "🧬", "🧫", "🔬", "🧬"],
-    ["💊", "💉", "🌡️", "🩺", "🩹"],
-    ["🔬", "🧬", "🧪", "💊", "🌡️"],
-    ["🧠", "🫀", "🦴", "🦷", "👁️"],
-    ["🧪", "💉", "💊", "🔬", "🧬"]
+    ["🐘", "🦒", "🦓", "🦅", "🦉"], // Siluet hewan besar vs burung
+    ["🎸", "🎹", "🎷", "🥁", "🎻"], // Instrumen musik dengan bentuk khas
+    ["🍎", "🍌", "🍍", "🍇", "🍓"], // Buah dengan tekstur/bentuk berbeda
+    ["🦁", "🦜", "🥁", "🍌", "🐘"], // Campuran 1 (Bentuk dominan)
+    ["🎷", "🍓", "🦉", "🎹", "🦒"], // Campuran 2 (Bentuk vertikal vs horizontal)
+    ["🎻", "🍍", "🦓", "🦢", "🎹"], // Campuran 3 (Bentuk lengkung vs kaku)
+    ["🎸", "🍇", "🦅", "🦁", "🎷"], // Campuran 4
+    ["🦢", "🥁", "🍎", "🦒", "🎻"], // Campuran 5
+    ["🎹", "🎷", "🐘", "🦉", "🍌"], // Campuran 6
+    ["🦓", "🎻", "🍓", "🦅", "🦁"]  // Campuran 7
 ];
 
     let currentIdx = 0, timerLeft = 60, interval = null, results = [], pName = "", activeChars = [];
